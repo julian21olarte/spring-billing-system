@@ -2,6 +2,7 @@ package com.juian21oarte.thymeleafexample.controllers;
 
 import com.juian21oarte.thymeleafexample.models.Client;
 import com.juian21oarte.thymeleafexample.repositories.ClientRepository;
+import com.juian21oarte.thymeleafexample.services.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,12 +20,12 @@ import javax.validation.Valid;
 public class ClientController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientServiceImpl clientService;
 
     @GetMapping(value = "/clients")
     public String clients(Model model) {
         model.addAttribute("title", "Clients");
-        model.addAttribute("clients", this.clientRepository.findAll());
+        model.addAttribute("clients", this.clientService.findAll());
         return "clients";
     }
 
@@ -43,15 +44,21 @@ public class ClientController {
             model.addAttribute("title", "Create Client");
             return "formClient";
         }
-        this.clientRepository.save(client);
+        this.clientService.save(client);
         sessionStatus.setComplete(); // complete session and remove client object.
-        return "redirect:clients";
+        return "redirect:/clients";
     }
 
     @GetMapping(value = "/update/{id}")
     public String updateClientForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("title", "Update Client");
-        model.addAttribute("client", this.clientRepository.findById(id));
+        model.addAttribute("client", this.clientService.findById(id));
         return "formClient";
+    }
+
+    @GetMapping(value = "/delete/{id}")
+    public String deleteClient(@PathVariable("id") Long id) {
+        this.clientService.deleteById(id);
+        return "redirect:/clients";
     }
 }

@@ -49,8 +49,8 @@
                 <td th:text="${client.email}"></td>
                 <td th:text="${client.createdAt}"></td>
                 <td>
-                    <a class="btn btn-sm btn-primary" th:href="@{/update/{id}(id=${client.id})}" th:text="Edit"></a>
-                    <button class="btn btn-sm btn-danger">delete</button>
+                    <a class="btn btn-xs btn-primary" th:href="@{/update/{id}(id=${client.id})}" th:text="Edit"></a>
+                    <a class="btn btn-xs btn-danger" th:href="@{/delete/{id}(id=${client.id})}" th:text="Delete" onclick="return confirm('Are you sure delete this client?');"></a>
                 </td>
             </tr>
             </tbody>
