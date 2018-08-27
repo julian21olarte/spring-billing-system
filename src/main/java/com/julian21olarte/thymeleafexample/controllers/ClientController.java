@@ -1,20 +1,22 @@
-package com.juian21oarte.thymeleafexample.controllers;
+package com.julian21olarte.thymeleafexample.controllers;
 
-import com.juian21oarte.thymeleafexample.models.Client;
-import com.juian21oarte.thymeleafexample.repositories.ClientRepository;
-import com.juian21oarte.thymeleafexample.services.ClientServiceImpl;
+import com.julian21olarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.services.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 @Controller
 @SessionAttributes("client")
@@ -38,16 +40,31 @@ public class ClientController {
     }
 
     @PostMapping(value = "/create")
-    public String createClientRequest(@Valid Client client, BindingResult result, Model model, RedirectAttributes flash, SessionStatus sessionStatus) {
+    public String createClientRequest(@Valid Client client, BindingResult result, Model model,
+                  RedirectAttributes flash, SessionStatus sessionStatus, @RequestParam("file") MultipartFile photo) throws IOException {
 
         // if has errors return the same view and show errors
         if(result.hasErrors()) {
             model.addAttribute("title", "Create Client");
             return "formClient";
         }
+        if(!photo.isEmpty()) {
+            String photoName = photo.getOriginalFilename();
+            byte[] bytes = photo.getBytes();
+            String rootPath = Paths.get("src//main//resources//static/uploads").toFile().getAbsolutePath();
+            Path pathFile = Paths.get(rootPath + "//" + photoName);
+            Files.write(pathFile, bytes);
+            flash.addFlashAttribute("info", "Photo uploaded successful - " + photoName);
+
+            client.setPhoto(photoName);
+        }
         this.clientService.save(client);
         sessionStatus.setComplete(); // complete session and remove client object.
-        flash.addFlashAttribute("success", "Client was created!");
+        if ((client.getId() == null)) {
+            flash.addFlashAttribute("success", "Client was created!");
+        } else {
+            flash.addFlashAttribute("success", "Client was updated!");
+        }
         return "redirect:/clients";
     }
 
@@ -59,7 +76,6 @@ public class ClientController {
             return "redirect:/clients";
         }
         model.addAttribute("client", this.clientService.findById(id));
-        flash.addFlashAttribute("success", "Client was updated!");
         return "formClient";
     }
 
@@ -68,5 +84,16 @@ public class ClientController {
         this.clientService.deleteById(id);
         flash.addFlashAttribute("success", "Client was deleted!");
         return "redirect:/clients";
+    }
+
+    @GetMapping("/view/{id}")
+    public String viewClient(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
+        model.addAttribute("title", "Update Client");
+        if(!this.clientService.existById(id)) {
+            flash.addFlashAttribute("danger", "Not exist any client with id " + id);
+            return "redirect:/clients";
+        }
+        model.addAttribute("client", this.clientService.findById(id));
+        return "viewClient";
     }
 }

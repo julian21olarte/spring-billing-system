@@ -1,4 +1,4 @@
-package com.juian21oarte.thymeleafexample;
+package com.julian21olarte.thymeleafexample;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

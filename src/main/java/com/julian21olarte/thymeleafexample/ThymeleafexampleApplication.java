@@ -1,4 +1,4 @@
-package com.juian21oarte.thymeleafexample;
+package com.julian21olarte.thymeleafexample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

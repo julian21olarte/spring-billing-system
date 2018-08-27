@@ -1,6 +1,6 @@
-package com.juian21oarte.thymeleafexample.controllers;
+package com.julian21olarte.thymeleafexample.controllers;
 
-import com.juian21oarte.thymeleafexample.repositories.ClientRepository;
+import com.julian21olarte.thymeleafexample.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

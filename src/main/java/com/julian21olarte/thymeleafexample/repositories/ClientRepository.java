@@ -1,6 +1,6 @@
-package com.juian21oarte.thymeleafexample.repositories;
+package com.julian21olarte.thymeleafexample.repositories;
 
-import com.juian21oarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.models.Client;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
-package com.juian21oarte.thymeleafexample.services;
+package com.julian21olarte.thymeleafexample.services;
 
-import com.juian21oarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.models.Client;
 
 import java.util.Optional;
 

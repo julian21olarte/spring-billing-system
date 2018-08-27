@@ -1,4 +1,4 @@
-package com.juian21oarte.thymeleafexample.models;
+package com.julian21olarte.thymeleafexample.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "clients")
 public class Client {
-    private long id;
+    private Long id;
 
     @NotEmpty
     private String name;
@@ -21,15 +21,17 @@ public class Client {
     @NotEmpty
     private String email;
 
+    private String photo;
+
     private Date createdAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,6 +63,16 @@ public class Client {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Basic
+    @Column(name = "photo", nullable = true)
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Basic

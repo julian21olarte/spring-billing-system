@@ -1,7 +1,7 @@
-package com.juian21oarte.thymeleafexample.services;
+package com.julian21olarte.thymeleafexample.services;
 
-import com.juian21oarte.thymeleafexample.models.Client;
-import com.juian21oarte.thymeleafexample.repositories.ClientRepository;
+import com.julian21olarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
