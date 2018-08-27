@@ -94,12 +94,13 @@ public class Client {
                 Objects.equals(name, clients.name) &&
                 Objects.equals(lastname, clients.lastname) &&
                 Objects.equals(email, clients.email) &&
+                Objects.equals(photo, clients.photo) &&
                 Objects.equals(createdAt, clients.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lastname, email, createdAt);
+        return Objects.hash(id, name, lastname, email, photo, createdAt);
     }
 
     @PrePersist

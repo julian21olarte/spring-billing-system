@@ -75,7 +75,7 @@ public class ClientController {
             flash.addFlashAttribute("danger", "Not exist any client with id " + id);
             return "redirect:/clients";
         }
-        model.addAttribute("client", this.clientService.findById(id));
+        model.addAttribute("client", this.clientService.findById(id).get());
         return "formClient";
     }
 
@@ -86,14 +86,16 @@ public class ClientController {
         return "redirect:/clients";
     }
 
-    @GetMapping("/view/{id}")
+    @GetMapping(value = "/view/{id}")
     public String viewClient(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
+
         model.addAttribute("title", "Update Client");
+
         if(!this.clientService.existById(id)) {
             flash.addFlashAttribute("danger", "Not exist any client with id " + id);
             return "redirect:/clients";
         }
-        model.addAttribute("client", this.clientService.findById(id));
+        model.addAttribute("client", this.clientService.findById(id).get());
         return "viewClient";
     }
 }
