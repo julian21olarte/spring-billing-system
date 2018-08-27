@@ -9,10 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
 
 @Controller
+@SessionAttributes("client")
 public class ClientController {
 
     @Autowired
@@ -33,7 +36,7 @@ public class ClientController {
     }
 
     @PostMapping(value = "/create")
-    public String createClientRequest(@Valid Client client, BindingResult result, Model model) {
+    public String createClientRequest(@Valid Client client, BindingResult result, Model model, SessionStatus sessionStatus) {
 
         // if has errors return the same view and show errors
         if(result.hasErrors()) {
@@ -41,6 +44,7 @@ public class ClientController {
             return "formClient";
         }
         this.clientRepository.save(client);
+        sessionStatus.setComplete(); // complete session and remove client object.
         return "redirect:clients";
     }
 

@@ -17,8 +17,8 @@ public class Client {
     @NotEmpty
     private String lastname;
 
-    @NotEmpty
     @Email
+    @NotEmpty
     private String email;
 
     private Date createdAt;
