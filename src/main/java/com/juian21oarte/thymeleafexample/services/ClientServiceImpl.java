@@ -32,4 +32,9 @@ public class ClientServiceImpl implements IClientService {
     public void deleteById(Long id) {
         this.clientRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existById(Long id) {
+        return this.clientRepository.existsById(id);
+    }
 }

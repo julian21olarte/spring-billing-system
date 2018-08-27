@@ -1,70 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${title}"></title>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
-</head>
+<head th:replace="layouts/layout :: head"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <a class="navbar-brand" href="#">Spring</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="@{/home}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/clients}">Clients</a>
-                </li>
-            </ul>
+    <header th:replace="layouts/layout :: header"></header>
+
+    <div th:replace="layouts/layout :: title"></div>
+
+    <div class="container card main py-4 my-3">
+        <div class="card-header bg-white">
+            <a th:href="@{/create}" class="btn btn-primary">New Client</a>
         </div>
-    </nav>
-
-    <div class="container title my-3">
-        <h1 class="main-title" th:text="${title}"></h1>
-        <hr>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="client: ${clients}">
+                    <td th:text="${client.id}"></td>
+                    <td th:text="${client.name + ' ' + client.lastname}"></td>
+                    <td th:text="${client.email}"></td>
+                    <td th:text="${client.createdAt}"></td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" th:href="@{/update/{id}(id=${client.id})}" th:text="Edit"></a>
+                        <a class="btn btn-xs btn-danger" th:href="@{/delete/{id}(id=${client.id})}" th:text="Delete" onclick="return confirm('Are you sure delete this client?');"></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="container main py-4">
-        <a th:href="@{/create}" class="btn btn-primary">New Client</a>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="client: ${clients}">
-                <td th:text="${client.id}"></td>
-                <td th:text="${client.name + ' ' + client.lastname}"></td>
-                <td th:text="${client.email}"></td>
-                <td th:text="${client.createdAt}"></td>
-                <td>
-                    <a class="btn btn-xs btn-primary" th:href="@{/update/{id}(id=${client.id})}" th:text="Edit"></a>
-                    <a class="btn btn-xs btn-danger" th:href="@{/delete/{id}(id=${client.id})}" th:text="Delete" onclick="return confirm('Are you sure delete this client?');"></a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <footer class="container-fluid bg-dark navbar-dark p-3 footer">
-        <img th:src="@{images/spring-framework.png}" th:width="150" alt="">
-        <h5 class="text-light">Spring Billing - <a class="text-light" href="http://github.com/julian21olarte">julian21olarte</a></h5>
-    </footer>
-
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <footer th:replace="layouts/layout :: footer"></footer>
 </body>
 </html>

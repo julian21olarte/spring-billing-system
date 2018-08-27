@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -37,7 +38,7 @@ public class ClientController {
     }
 
     @PostMapping(value = "/create")
-    public String createClientRequest(@Valid Client client, BindingResult result, Model model, SessionStatus sessionStatus) {
+    public String createClientRequest(@Valid Client client, BindingResult result, Model model, RedirectAttributes flash, SessionStatus sessionStatus) {
 
         // if has errors return the same view and show errors
         if(result.hasErrors()) {
@@ -46,19 +47,26 @@ public class ClientController {
         }
         this.clientService.save(client);
         sessionStatus.setComplete(); // complete session and remove client object.
+        flash.addFlashAttribute("success", "Client was created!");
         return "redirect:/clients";
     }
 
     @GetMapping(value = "/update/{id}")
-    public String updateClientForm(@PathVariable("id") Long id, Model model) {
+    public String updateClientForm(@PathVariable("id") Long id, Model model, RedirectAttributes flash) {
         model.addAttribute("title", "Update Client");
+        if(!this.clientService.existById(id)) {
+            flash.addFlashAttribute("danger", "Not exist any client with id " + id);
+            return "redirect:/clients";
+        }
         model.addAttribute("client", this.clientService.findById(id));
+        flash.addFlashAttribute("success", "Client was updated!");
         return "formClient";
     }
 
     @GetMapping(value = "/delete/{id}")
-    public String deleteClient(@PathVariable("id") Long id) {
+    public String deleteClient(@PathVariable("id") Long id, RedirectAttributes flash) {
         this.clientService.deleteById(id);
+        flash.addFlashAttribute("success", "Client was deleted!");
         return "redirect:/clients";
     }
 }
