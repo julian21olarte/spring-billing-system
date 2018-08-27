@@ -1,25 +1,35 @@
 package com.juian21oarte.thymeleafexample.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "clients")
 public class Client {
-    private int id;
+    private long id;
+
+    @NotEmpty
     private String name;
+
+    @NotEmpty
     private String lastname;
+
+    @NotEmpty
+    @Email
     private String email;
-    private Timestamp createdAt;
+
+    private Date createdAt;
 
     @Id
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -54,12 +64,12 @@ public class Client {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = true)
-    public Timestamp getCreatedAt() {
+    @Column(name = "created_at", nullable = true, updatable= false)
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -78,5 +88,10 @@ public class Client {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, lastname, email, createdAt);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = new Date();
     }
 }
