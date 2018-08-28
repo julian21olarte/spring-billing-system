@@ -1,5 +1,5 @@
 /target/
-/src/main/resources/static/uploads/
+/uploads/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
