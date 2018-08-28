@@ -45,12 +45,14 @@ public class ClientController {
                   RedirectAttributes flash, SessionStatus sessionStatus, @RequestParam("file") MultipartFile photo) throws IOException {
 
         if(result.hasErrors()) {
-            model.addAttribute("title", "Create Client");
-            return "formClient";
+            return "redirect:/create";
         }
 
         String pathName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
         if(this.storeService.storeFileInUploadsFolder(photo, pathName)) {
+            if(client.getPhoto() != null) {
+                this.storeService.deleteFileFromUploadsFolder(client.getPhoto());
+            }
             flash.addFlashAttribute("info", "Photo uploaded successful - " + pathName);
             client.setPhoto(pathName);
         }
@@ -78,8 +80,12 @@ public class ClientController {
     }
 
     @GetMapping(value = "/delete/{id}")
-    public String deleteClient(@PathVariable("id") Long id, RedirectAttributes flash) {
+    public String deleteClient(@PathVariable("id") Long id, RedirectAttributes flash) throws IOException {
+        String oldPhoto = this.clientService.findById(id).get().getPhoto();
         this.clientService.deleteById(id);
+        if(oldPhoto != null) {
+            this.storeService.deleteFileFromUploadsFolder(oldPhoto);
+        }
         flash.addFlashAttribute("success", "Client was deleted!");
         return "redirect:/clients";
     }

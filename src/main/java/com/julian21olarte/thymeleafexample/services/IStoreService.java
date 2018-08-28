@@ -9,4 +9,7 @@ public interface IStoreService {
 
     boolean storeFileInUploadsFolder(MultipartFile file, String pathName) throws IOException;
     boolean storeFile(MultipartFile file, Path path) throws IOException;
+    boolean deleteFile(Path path) throws IOException;
+    boolean deleteFileFromUploadsFolder(String pathName) throws IOException;
+    Path getUploadsPath(String fileName);
 }
