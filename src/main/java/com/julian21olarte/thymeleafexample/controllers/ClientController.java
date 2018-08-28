@@ -2,6 +2,7 @@ package com.julian21olarte.thymeleafexample.controllers;
 
 import com.julian21olarte.thymeleafexample.models.Client;
 import com.julian21olarte.thymeleafexample.services.ClientServiceImpl;
+import com.julian21olarte.thymeleafexample.services.StoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @SessionAttributes("client")
@@ -24,6 +22,9 @@ public class ClientController {
 
     @Autowired
     private ClientServiceImpl clientService;
+
+    @Autowired
+    private StoreServiceImpl storeService;
 
     @GetMapping(value = "/clients")
     public String clients(Model model) {
@@ -43,23 +44,20 @@ public class ClientController {
     public String createClientRequest(@Valid Client client, BindingResult result, Model model,
                   RedirectAttributes flash, SessionStatus sessionStatus, @RequestParam("file") MultipartFile photo) throws IOException {
 
-        // if has errors return the same view and show errors
         if(result.hasErrors()) {
             model.addAttribute("title", "Create Client");
             return "formClient";
         }
-        if(!photo.isEmpty()) {
-            String photoName = photo.getOriginalFilename();
-            byte[] bytes = photo.getBytes();
-            String rootPath = Paths.get("src//main//resources//static/uploads").toFile().getAbsolutePath();
-            Path pathFile = Paths.get(rootPath + "//" + photoName);
-            Files.write(pathFile, bytes);
-            flash.addFlashAttribute("info", "Photo uploaded successful - " + photoName);
 
-            client.setPhoto(photoName);
+        String pathName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+        if(this.storeService.storeFileInUploadsFolder(photo, pathName)) {
+            flash.addFlashAttribute("info", "Photo uploaded successful - " + pathName);
+            client.setPhoto(pathName);
         }
+
         this.clientService.save(client);
         sessionStatus.setComplete(); // complete session and remove client object.
+
         if ((client.getId() == null)) {
             flash.addFlashAttribute("success", "Client was created!");
         } else {
