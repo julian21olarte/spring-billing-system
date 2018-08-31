@@ -2,6 +2,7 @@ package com.julian21olarte.thymeleafexample.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,6 +13,7 @@ public class Bill {
     private String observation;
     private Date createdAt;
     private Client client;
+    private List<ItemBill> itemBills;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +63,16 @@ public class Bill {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "bill")
+    public List<ItemBill> getItemBills() {
+        return itemBills;
+    }
+
+    public void setItemBills(List<ItemBill> itemBills) {
+        this.itemBills = itemBills;
     }
 
     @Override
