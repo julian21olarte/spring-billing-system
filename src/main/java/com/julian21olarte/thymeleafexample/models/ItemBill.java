@@ -10,7 +10,6 @@ public class ItemBill {
     private long id;
     private int quantity;
     private Date createdAt;
-    private Bill bill;
     private Product product;
 
     @Id
@@ -44,15 +43,7 @@ public class ItemBill {
         this.createdAt = createdAt;
     }
 
-    public Bill getBill() {
-        return bill;
-    }
-
-    public void setBill(Bill bill) {
-        this.bill = bill;
-    }
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product")
     public Product getProduct() {
         return product;
