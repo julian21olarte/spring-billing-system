@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +25,8 @@ public class Client {
     private String photo;
 
     private Date createdAt;
+
+    private List<Bill> bills;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -84,6 +87,15 @@ public class Client {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "client")
+    public List<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(List<Bill> bills) {
+        this.bills = bills;
     }
 
     @Override

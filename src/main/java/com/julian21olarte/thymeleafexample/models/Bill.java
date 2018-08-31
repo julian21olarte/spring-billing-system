@@ -1,0 +1,86 @@
+package com.julian21olarte.thymeleafexample.models;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Objects;
+
+@Entity
+@Table(name = "bills")
+public class Bill {
+    private int id;
+    private String description;
+    private String observation;
+    private Date createdAt;
+    private Client client;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Basic
+    @Column(name = "description", nullable = false, length = 200)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Basic
+    @Column(name = "observation", nullable = true, length = 200)
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    @Basic
+    @Column(name = "created_at", nullable = false)
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bill bill = (Bill) o;
+        return id == bill.id &&
+                Objects.equals(description, bill.description) &&
+                Objects.equals(observation, bill.observation) &&
+                Objects.equals(createdAt, bill.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, observation, createdAt);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = new Date();
+    }
+}
