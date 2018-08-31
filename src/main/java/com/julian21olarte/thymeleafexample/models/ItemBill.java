@@ -1,6 +1,7 @@
 package com.julian21olarte.thymeleafexample.models;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -8,7 +9,9 @@ import java.util.Objects;
 public class ItemBill {
     private long id;
     private int quantity;
+    private Date createdAt;
     private Bill bill;
+    private Product product;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -31,12 +34,32 @@ public class ItemBill {
         this.quantity = quantity;
     }
 
+    @Basic
+    @Column(name = "created_at", nullable = true, updatable= false)
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Bill getBill() {
         return bill;
     }
 
     public void setBill(Bill bill) {
         this.bill = bill;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product")
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override
@@ -51,5 +74,14 @@ public class ItemBill {
     @Override
     public int hashCode() {
         return Objects.hash(id, quantity);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = new Date();
+    }
+
+    public Double calculateTotal() {
+        return this.getQuantity() * this.getProduct().getPrice();
     }
 }

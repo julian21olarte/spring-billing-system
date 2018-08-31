@@ -47,7 +47,7 @@ public class Bill {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = true, updatable= false)
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -94,5 +94,13 @@ public class Bill {
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
+    }
+
+
+    public Double calculateTotal() {
+        return this.getItemBills()
+                .stream()
+                .mapToDouble((product) -> product.calculateTotal())
+                .sum();
     }
 }
