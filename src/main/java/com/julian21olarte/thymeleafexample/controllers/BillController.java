@@ -25,7 +25,7 @@ public class BillController {
         Client myClient = this.clientService.findById(client).get();
         if(myClient == null) {
             flash.addFlashAttribute("error", "Not exist eny client with this id");
-            return "redirect:/clients";
+            return "redirect:/client/list";
         }
 
         Bill bill = new Bill();
@@ -33,6 +33,6 @@ public class BillController {
 
         model.addAttribute("bill", bill);
         model.addAttribute("title", "new Bill");
-        return "bill/billForm";
+        return "bill/formBill";
     }
 }

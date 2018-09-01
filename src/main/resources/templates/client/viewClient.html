@@ -8,6 +8,10 @@
 
 <div class="container main py-4">
     <div class="card">
+        <div class="card-header bg-white">
+            <a th:href="@{/client/list}" class="btn btn-primary text-white mb-2" th:text="'Back'"></a>
+            <a th:href="@{/bill/form/{id}(id=${client.id})}" class="btn btn-success mb-2" th:text="'Create New Bill'"></a>
+        </div>
         <div class="card-body row">
             <div class="col-3" th:if="${client.photo != null}">
                 <img class="client-img rounded rounded-circle shadow" th:width="120" th:height="120" th:src="@{/uploads/{img-path}(img-path=${client.photo})}" alt="client-img">
@@ -32,9 +36,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-footer bg-white">
-            <a th:href="@{/client/list}" class="btn btn-primary text-white mb-2">back</a>
         </div>
     </div>
 
