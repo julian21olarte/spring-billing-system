@@ -8,7 +8,7 @@
 
     <div class="container card main py-4 my-3">
         <div class="card-header bg-white">
-            <a th:href="@{/create}" class="btn btn-primary">New Client</a>
+            <a th:href="@{/client/create}" class="btn btn-primary">New Client</a>
         </div>
         <div class="card-body">
             <table class="table table-striped">
@@ -28,9 +28,9 @@
                     <td th:text="${client.email}"></td>
                     <td th:text="${client.createdAt}"></td>
                     <td>
-                        <a class="btn btn-xs btn-info" th:href="@{/view/{id}(id=${client.id})}" th:text="View"></a>
-                        <a class="btn btn-xs btn-primary" th:href="@{/update/{id}(id=${client.id})}" th:text="Edit"></a>
-                        <a class="btn btn-xs btn-danger" th:href="@{/delete/{id}(id=${client.id})}" th:text="Delete" onclick="return confirm('Are you sure delete this client?');"></a>
+                        <a class="btn btn-xs btn-info" th:href="@{/client/view/{id}(id=${client.id})}" th:text="View"></a>
+                        <a class="btn btn-xs btn-primary" th:href="@{/client/update/{id}(id=${client.id})}" th:text="Edit"></a>
+                        <a class="btn btn-xs btn-danger" th:href="@{/client/delete/{id}(id=${client.id})}" th:text="Delete" onclick="return confirm('Are you sure delete this client?');"></a>
                     </td>
                 </tr>
                 </tbody>

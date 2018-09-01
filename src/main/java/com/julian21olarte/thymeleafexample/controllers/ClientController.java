@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/client")
 @SessionAttributes("client")
 public class ClientController {
 
@@ -26,18 +27,18 @@ public class ClientController {
     @Autowired
     private StoreServiceImpl storeService;
 
-    @GetMapping(value = "/clients")
+    @GetMapping(value = "/list")
     public String clients(Model model) {
         model.addAttribute("title", "Clients");
         model.addAttribute("clients", this.clientService.findAll());
-        return "clients";
+        return "client/listClients";
     }
 
     @GetMapping(value = "/create")
     public String createClientForm(Model model) {
         model.addAttribute("title", "Create Client");
         model.addAttribute("client", new Client());
-        return "formClient";
+        return "client/formClient";
     }
 
     @PostMapping(value = "/create")
@@ -45,7 +46,7 @@ public class ClientController {
                   RedirectAttributes flash, SessionStatus sessionStatus, @RequestParam("file") MultipartFile photo) throws IOException {
 
         if(result.hasErrors()) {
-            return "redirect:/create";
+            return "redirect:/client/create";
         }
 
         String pathName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
@@ -65,7 +66,7 @@ public class ClientController {
         } else {
             flash.addFlashAttribute("success", "Client was updated!");
         }
-        return "redirect:/clients";
+        return "redirect:/client/list";
     }
 
     @GetMapping(value = "/update/{id}")
@@ -76,7 +77,7 @@ public class ClientController {
             return "redirect:/clients";
         }
         model.addAttribute("client", this.clientService.findById(id).get());
-        return "formClient";
+        return "client/formClient";
     }
 
     @GetMapping(value = "/delete/{id}")
@@ -87,7 +88,7 @@ public class ClientController {
             this.storeService.deleteFileFromUploadsFolder(oldPhoto);
         }
         flash.addFlashAttribute("success", "Client was deleted!");
-        return "redirect:/clients";
+        return "redirect:/client/list";
     }
 
     @GetMapping(value = "/view/{id}")
@@ -97,9 +98,9 @@ public class ClientController {
 
         if(!this.clientService.existById(id)) {
             flash.addFlashAttribute("danger", "Not exist any client with id " + id);
-            return "redirect:/clients";
+            return "redirect:/client/list";
         }
         model.addAttribute("client", this.clientService.findById(id).get());
-        return "viewClient";
+        return "client/viewClient";
     }
 }
