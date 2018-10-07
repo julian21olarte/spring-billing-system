@@ -1,7 +1,10 @@
 package com.julian21olarte.thymeleafexample.controllers;
 
 import com.julian21olarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.models.Invite;
 import com.julian21olarte.thymeleafexample.services.ClientServiceImpl;
+import com.julian21olarte.thymeleafexample.services.InviteServiceImpl;
+import com.julian21olarte.thymeleafexample.services.MailServiceImpl;
 import com.julian21olarte.thymeleafexample.services.StoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +21,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/client")
-@SessionAttributes("client")
+@SessionAttributes(value = {"client", "invite"})
 public class ClientController {
 
     @Autowired
@@ -26,6 +29,12 @@ public class ClientController {
 
     @Autowired
     private StoreServiceImpl storeService;
+
+    @Autowired
+    private MailServiceImpl mailService;
+
+    @Autowired
+    private InviteServiceImpl inviteService;
 
     @GetMapping(value = "/list")
     public String clients(Model model) {
@@ -94,13 +103,32 @@ public class ClientController {
     @GetMapping(value = "/view/{id}")
     public String viewClient(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
 
-        model.addAttribute("title", "Update Client");
+        model.addAttribute("title", "View Client");
 
         if(!this.clientService.existById(id)) {
             flash.addFlashAttribute("danger", "Not exist any client with id " + id);
             return "redirect:/client/list";
         }
-        model.addAttribute("client", this.clientService.findById(id).get());
+        Client client = this.clientService.findById(id).get();
+        Invite invite = new Invite();
+        invite.setMessage(String.format("Hi! %s %s, i wanna share this invitation with you.", client.getName(), client.getLastname()));
+        invite.setClient(client);
+        model.addAttribute("client", client);
+        model.addAttribute("invite", invite);
         return "client/viewClient";
+    }
+
+    @PostMapping(value = "/invite")
+    public String invite(@Valid Invite invite, BindingResult result, Model model,
+                         RedirectAttributes flash, SessionStatus sessionStatus) {
+
+        System.out.println(invite.getMessage());
+
+        this.inviteService.save(invite);
+
+        this.mailService.sendMessage(invite.getClient().getEmail(), "Invite Spring Billing", invite.getMessage());
+        flash.addFlashAttribute("success", "Invite sended correctly!");
+        sessionStatus.setComplete(); // complete session and remove invite object.
+        return "redirect:/client/view/" + invite.getClient().getId();
     }
 }
