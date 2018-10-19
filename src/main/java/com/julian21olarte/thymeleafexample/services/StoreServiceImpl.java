@@ -2,6 +2,7 @@ package com.julian21olarte.thymeleafexample.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
@@ -12,6 +13,8 @@ import java.nio.file.Paths;
 
 @Service
 public class StoreServiceImpl implements IStoreService {
+
+    private String UPLOADS_FOLDER;
 
     @Autowired
     ServletContext context;
@@ -43,6 +46,16 @@ public class StoreServiceImpl implements IStoreService {
 
     @Override
     public Path getUploadsPath(String fileName) {
-        return Paths.get("uploads").resolve(fileName).toAbsolutePath();
+        return Paths.get(UPLOADS_FOLDER).resolve(fileName).toAbsolutePath();
+    }
+
+    @Override
+    public void deleteAll() {
+        FileSystemUtils.deleteRecursively(Paths.get(UPLOADS_FOLDER).toFile());
+    }
+
+    @Override
+    public void init() throws IOException {
+        Files.createDirectory(Paths.get(this.UPLOADS_FOLDER));
     }
 }

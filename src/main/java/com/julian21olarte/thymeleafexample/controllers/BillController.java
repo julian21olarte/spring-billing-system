@@ -2,8 +2,11 @@ package com.julian21olarte.thymeleafexample.controllers;
 
 import com.julian21olarte.thymeleafexample.models.Bill;
 import com.julian21olarte.thymeleafexample.models.Client;
+import com.julian21olarte.thymeleafexample.models.Product;
 import com.julian21olarte.thymeleafexample.services.BillServiceImpl;
 import com.julian21olarte.thymeleafexample.services.ClientServiceImpl;
+import com.julian21olarte.thymeleafexample.services.ProductServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +29,9 @@ public class BillController {
     @Autowired
     private BillServiceImpl billService;
 
+    @Autowired
+    private ProductServiceImpl productService;
+
     @GetMapping("/form/{client}")
     public String billForm(@PathVariable("client") Long client, Model model, RedirectAttributes flash) {
         Client myClient = this.clientService.findById(client).get();
@@ -38,7 +44,7 @@ public class BillController {
         bill.setClient(myClient);
 
         model.addAttribute("bill", bill);
-        model.addAttribute("title", "new Bill");
+        model.addAttribute("title", "New Bill");
         return "bill/formBill";
     }
 
@@ -54,5 +60,10 @@ public class BillController {
         this.billService.save(bill);
         sessionStatus.setComplete(); // complete session and remove bill object.
         return "redirect:/bill/form/" + bill.getClient().getId();
+    }
+
+    @GetMapping(value = "/search-product/{term}", produces = {"application/json"})
+    public @ResponseBody Iterable<Product> getProducts(@PathVariable("term") String term) {
+        return this.productService.findProductsByName(term);
     }
 }

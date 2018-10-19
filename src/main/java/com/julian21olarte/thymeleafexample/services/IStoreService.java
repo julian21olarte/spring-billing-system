@@ -12,4 +12,6 @@ public interface IStoreService {
     boolean deleteFile(Path path) throws IOException;
     boolean deleteFileFromUploadsFolder(String pathName) throws IOException;
     Path getUploadsPath(String fileName);
+    void deleteAll();
+    void init() throws IOException;
 }
