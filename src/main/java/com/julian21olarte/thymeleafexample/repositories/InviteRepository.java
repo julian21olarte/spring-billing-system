@@ -1,6 +1,5 @@
 package com.julian21olarte.thymeleafexample.repositories;
 
-import com.julian21olarte.thymeleafexample.models.Bill;
 import com.julian21olarte.thymeleafexample.models.Invite;
 import org.springframework.data.repository.CrudRepository;
 
